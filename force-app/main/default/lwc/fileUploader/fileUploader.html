@@ -1,0 +1,35 @@
+<template>
+    <lightning-card title="CSV File Uploader">
+        <lightning-input type="file" label="Upload CSV" name="fileUploader"
+                         accept=".csv" onchange={handleFilesChange}></lightning-input>
+
+        <lightning-button label="Upload File" onclick={uploadFile} class="slds-m-top_medium"></lightning-button>
+
+        <template if:true={fileContent}>
+            <lightning-card title="CSV Content" class="slds-m-top_medium">
+                <div class="slds-box slds-theme_default">
+                    <table class="slds-table slds-table_bordered slds-table_cell-buffer slds-table_striped">
+                        <thead>
+                            <tr>
+                                <template for:each={csvHeaders} for:item="header">
+                                    <th key={header} scope="col">
+                                        {header}
+                                    </th>
+                                </template>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template for:each={csvData} for:item="row">
+                                <tr key={row.id}>
+                                    <template for:each={row.cells} for:item="cell">
+                                        <td key={cell}>{cell}</td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </lightning-card>
+        </template>
+    </lightning-card>
+</template>
