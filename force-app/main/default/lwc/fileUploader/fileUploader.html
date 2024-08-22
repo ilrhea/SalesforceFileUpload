@@ -3,7 +3,8 @@
         <lightning-input type="file" label="Upload CSV" name="fileUploader"
                          accept=".csv" onchange={handleFilesChange}></lightning-input>
 
-        <lightning-button label="Upload File" onclick={uploadFile} class="slds-m-top_medium"></lightning-button>
+        <lightning-button label="Upload File" onclick={uploadFile} class="slds-m-top_medium" disabled={isUploadDisabled}></lightning-button>
+        <lightning-button label="Cancel" onclick={cancelUpload} class="slds-m-top_medium"></lightning-button>
 
         <template if:true={fileContent}>
             <lightning-card title="CSV Content" class="slds-m-top_medium">

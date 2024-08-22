@@ -8,35 +8,36 @@ export default class FileUploader extends LightningElement {
     @track fileContent;
     @track csvHeaders = [];
     @track csvData = [];
+    @track isUploadDisabled = true;
 
     handleFilesChange(event) {
         const file = event.target.files[0];
         if (file) {
             this.fileName = file.name;
             const reader = new FileReader();
-            reader.onload = (e) => {
+            
+            reader.onload = () => {
                 const fileContent = reader.result;
-                this.parseCSV(fileContent);
-                const base64Index = fileContent.indexOf('base64,') + 'base64,'.length;
-                this.fileContent = fileContent.substring(base64Index);
+                this.parseCSV(fileContent); // Parse and display CSV content
+                this.isUploadDisabled = false;
             };
-            reader.readAsText(file); // Read file as text to parse CSV
+
+            reader.readAsText(file); // Reads the file as text
         }
     }
 
     parseCSV(fileContent) {
-        const rows = fileContent.split('\n').map(row => row.trim()); // Split by newline and trim spaces
-        this.csvHeaders = rows[0].split(',').map(header => header.trim()); // First row as headers
-    
+        const rows = fileContent.split('\n');
+        this.csvHeaders = rows[0].split(',').map(header => header.trim());
         this.csvData = rows.slice(1).map((row, index) => ({
-            id: `row-${index}`,
-            cells: row.split(',').map(cell => cell.trim()) // Split each row into cells
+            id: `row-${index}-${row.split(',')[0].trim()}`, // Generate a unique id for each row
+            cells: row.split(',').map(cell => cell.trim())
         }));
     }
 
     uploadFile() {
         if (this.fileName && this.fileContent) {
-            saveFile({ fileName: this.fileName, base64Data: this.fileContent, contentType: 'text/csv' })
+            saveFile({ fileName: this.fileName, base64Data: btoa(this.fileContent), contentType: 'text/csv' })
                 .then(() => {
                     this.dispatchEvent(
                         new ShowToastEvent({
@@ -45,6 +46,7 @@ export default class FileUploader extends LightningElement {
                             variant: 'success',
                         }),
                     );
+                    this.resetUploader();
                 })
                 .catch(error => {
                     this.dispatchEvent(
@@ -63,6 +65,24 @@ export default class FileUploader extends LightningElement {
                     variant: 'error',
                 }),
             );
+        }
+    }
+
+    cancelUpload() {
+        this.resetUploader();
+    }
+
+    resetUploader() {
+        this.fileName = '';
+        this.fileContent = null;
+        this.csvHeaders = [];
+        this.csvData = [];
+        this.isUploadDisabled = true;
+
+        // Clear the file input
+        const fileInput = this.template.querySelector('lightning-input[type="file"]');
+        if (fileInput) {
+            fileInput.value = null;
         }
     }
 }
