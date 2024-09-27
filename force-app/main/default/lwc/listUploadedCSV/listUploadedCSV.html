@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Uploaded CSV Files">
+        <div class="slds-m-around_medium">
+            <lightning-datatable
+                key-field="Id"
+                data={csvFiles}
+                columns={columns}
+                hide-checkbox-column="true">
+            </lightning-datatable>
+        </div>
+    </lightning-card>
+</template>
+
+
+<!-- 
+<template>
+    <lightning-card title="Uploaded CSV Files" icon-name="custom:custom14">
+        <template if:true={csvFiles}>
+            <lightning-datatable
+                key-field="Id"
+                data={csvFiles}
+                columns={columns}
+                onrowaction={handleRowAction}
+                hide-checkbox-column="true">
+            </lightning-datatable>
+        </template>
+        <template if:false={csvFiles}>
+            <p>No CSV files found.</p>
+        </template>
+    </lightning-card>
+    <c-csv-viewer-modal></c-csv-viewer-modal>
+</template> -->

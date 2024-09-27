@@ -1,0 +1,17 @@
+<template>
+    <lightning-card title="CSV File Upload and Display v0.09">
+        <div class="slds-m-around_medium">
+            <lightning-input type="file" label="Upload CSV" onchange={handleFileChange}></lightning-input>
+            <lightning-button label="Upload" onclick={handleUpload} class="slds-m-top_medium" disabled={isUploadable}></lightning-button>
+            <lightning-button label="Cancel" onclick={handleCancel} class="slds-m-top_medium" disabled={isUploadable}></lightning-button>
+        </div>
+        <template if:true={fileData}>
+            <lightning-datatable
+                key-field="id"
+                data={fileData}
+                columns={columns}
+                class="slds-m-top_medium">
+            </lightning-datatable>
+        </template>
+    </lightning-card>
+</template>
